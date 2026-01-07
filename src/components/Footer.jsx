@@ -5,12 +5,10 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
+    <footer className="bg-white border-t mt-8 pt-6 text-sm text-gray-500">
+      <div className="max-w-7xl mx-auto px-4 py-10">
         {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-
           {/* Brand */}
           <div>
             <h2 className="text-xl font-bold text-blue-600 mb-2">
@@ -20,7 +18,6 @@ const Footer = () => {
               Find rental rooms easily or list your property for tenants.
             </p>
           </div>
-
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-semibold text-gray-800 mb-3">
@@ -44,7 +41,6 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-
           {/* For Owners */}
           <div>
             <h3 className="text-sm font-semibold text-gray-800 mb-3">
@@ -56,7 +52,6 @@ const Footer = () => {
               <li>Manage Your Rooms</li>
             </ul>
           </div>
-
           {/* Contact / Info */}
           <div>
             <h3 className="text-sm font-semibold text-gray-800 mb-3">
@@ -68,7 +63,6 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-
         {/* Divider */}
         <div className="border-t mt-8 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
           <p>© {year} RoomFinder. All rights reserved.</p>
@@ -81,9 +75,8 @@ const Footer = () => {
             </span>
           </div>
         </div>
-
       </div>
-
+    </footer>
   );
 };
 
