@@ -1,77 +1,99 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { LogoIcon } from './Icons';
+import { Home, LogIn, UserPlus, PlusCircle, Upload, Settings, Mail, MapPin, Shield, FileText } from 'lucide-react';
 
 const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-white border-t mt-8 pt-6 text-sm text-gray-500">
-      <div className="max-w-7xl mx-auto px-4 py-10">
-        {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
+    <footer className="border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white mt-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6">
           <div>
-            <h2 className="text-xl font-bold text-blue-600 mb-2">
-              RoomFinder
-            </h2>
-            <p className="text-sm text-gray-600">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600">
+                <LogoIcon className="w-4 h-4 text-white" />
+              </div>
+              <h3 className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">RoomFinder</h3>
+            </div>
+            <p className="text-xs text-gray-600 leading-relaxed">
               Find rental rooms easily or list your property for tenants.
             </p>
           </div>
-          {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-1.5">
+              <Home className="w-3.5 h-3.5" />
               Quick Links
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+            </h4>
+            <ul className="space-y-2">
               <li>
-                <Link to="/" className="hover:text-blue-600">
+                <Link to="/" className="text-xs text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                  <Home className="w-3 h-3" />
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-blue-600">
+                <Link to="/login" className="text-xs text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                  <LogIn className="w-3 h-3" />
                   Login
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="hover:text-blue-600">
+                <Link to="/register" className="text-xs text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1.5">
+                  <UserPlus className="w-3 h-3" />
                   Sign Up
                 </Link>
               </li>
             </ul>
           </div>
-          {/* For Owners */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-1.5">
+              <Settings className="w-3.5 h-3.5" />
               For Owners
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li>Add Room Listings</li>
-              <li>Upload Room Images</li>
-              <li>Manage Your Rooms</li>
+            </h4>
+            <ul className="space-y-2 text-xs text-gray-600">
+              <li className="flex items-center gap-1.5">
+                <PlusCircle className="w-3 h-3" />
+                Add Listings
+              </li>
+              <li className="flex items-center gap-1.5">
+                <Upload className="w-3 h-3" />
+                Upload Images
+              </li>
+              <li className="flex items-center gap-1.5">
+                <Settings className="w-3 h-3" />
+                Manage Rooms
+              </li>
             </ul>
           </div>
-          {/* Contact / Info */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-800 mb-3">
+            <h4 className="text-xs font-semibold text-gray-900 mb-3 flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5" />
               Contact
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li>Email: support@roomfinder.com</li>
-              <li>Location: India</li>
+            </h4>
+            <ul className="space-y-2 text-xs text-gray-600">
+              <li className="flex items-center gap-1.5">
+                <Mail className="w-3 h-3" />
+                support@roomfinder.com
+              </li>
+              <li className="flex items-center gap-1.5">
+                <MapPin className="w-3 h-3" />
+                India
+              </li>
             </ul>
           </div>
         </div>
-        {/* Divider */}
-        <div className="border-t mt-8 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© {year} RoomFinder. All rights reserved.</p>
-          <div className="flex space-x-4 mt-2 md:mt-0">
-            <span className="hover:text-blue-600 cursor-pointer">
-              Privacy Policy
+        <div className="border-t border-gray-200 pt-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-xs text-gray-500">© {year} RoomFinder. All rights reserved.</p>
+          <div className="flex gap-4 text-xs">
+            <span className="text-gray-500 hover:text-blue-600 cursor-pointer transition-colors flex items-center gap-1.5">
+              <Shield className="w-3 h-3" />
+              Privacy
             </span>
-            <span className="hover:text-blue-600 cursor-pointer">
-              Terms of Service
+            <span className="text-gray-500 hover:text-blue-600 cursor-pointer transition-colors flex items-center gap-1.5">
+              <FileText className="w-3 h-3" />
+              Terms
             </span>
           </div>
         </div>

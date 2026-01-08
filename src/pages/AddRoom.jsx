@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { MapPin, DollarSign, Home, Users, Phone, Upload as UploadIcon } from 'lucide-react';
+import { Input } from '../components/ui/Input';
+import { Button } from '../components/ui/Button';
 
 export default function AddRoom({ user, onRoomAdded }) {
   const [form, setForm] = useState({
@@ -89,38 +92,87 @@ export default function AddRoom({ user, onRoomAdded }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 30 }}>
-      <h3>Add Room</h3>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          name="title"
+          label="Room Title"
+          placeholder="e.g., Cozy 1 BHK Apartment"
+          value={form.title}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          icon={MapPin}
+          name="location"
+          label="Location"
+          placeholder="City, Area"
+          value={form.location}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          icon={DollarSign}
+          name="rent"
+          type="number"
+          label="Monthly Rent (₹)"
+          placeholder="15000"
+          value={form.rent}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          icon={Home}
+          name="property_type"
+          label="Property Type"
+          placeholder="1 BHK, 2 Bed, Studio"
+          value={form.property_type}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          icon={Users}
+          name="tenant_preference"
+          label="Tenant Preference"
+          placeholder="Family, Bachelor, Working Professional"
+          value={form.tenant_preference}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          icon={Phone}
+          name="contact_number"
+          label="Contact Number"
+          placeholder="+91 9876543210"
+          value={form.contact_number}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input name="title" placeholder="Title" value={form.title} onChange={handleChange} required />
-      <br /><br />
+      <div>
+        <Input
+          icon={UploadIcon}
+          type="file"
+          accept="image/*"
+          label="Room Image"
+          onChange={(e) => setImageFile(e.target.files[0])}
+        />
+        {imageFile && (
+          <p className="mt-1 text-xs text-gray-600">Selected: {imageFile.name}</p>
+        )}
+      </div>
 
-      <input name="location" placeholder="Location" value={form.location} onChange={handleChange} required />
-      <br /><br />
-
-      <input name="rent" type="number" placeholder="Rent" value={form.rent} onChange={handleChange} required />
-      <br /><br />
-
-      <input name="property_type" placeholder="Property Type" value={form.property_type} onChange={handleChange} required />
-      <br /><br />
-
-      <input name="tenant_preference" placeholder="Tenant Preference" value={form.tenant_preference} onChange={handleChange} required />
-      <br /><br />
-
-      <input name="contact_number" placeholder="Contact Number" value={form.contact_number} onChange={handleChange} />
-      <br /><br />
-
-      {/* 🖼 Image input */}
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setImageFile(e.target.files[0])}
-      />
-      <br /><br />
-
-      <button type="submit" disabled={loading}>
-        {loading ? 'Adding...' : 'Add Room'}
-      </button>
+      <Button
+        type="submit"
+        disabled={loading}
+        isLoading={loading}
+        variant="primary"
+        size="lg"
+        className="w-full"
+      >
+        <UploadIcon className="w-4 h-4 mr-2" />
+        {loading ? 'Adding Room...' : 'Add Room Listing'}
+      </Button>
     </form>
   );
 }
