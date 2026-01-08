@@ -24,8 +24,8 @@ export default function Register() {
       return;
     }
     setMessage('Signup success. Check your email to verify.');
-    // navigate to login or let user verify first
-    navigate('/login');
+    // navigate to login with state message
+    navigate('/login', { state: { info: 'Please confirm your email. A confirmation email has been sent.' } });
   };
 
   return (

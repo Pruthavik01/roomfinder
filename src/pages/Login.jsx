@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, LogIn as LoginIcon, AlertCircle } from 'lucide-react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { Mail, Lock, LogIn as LoginIcon, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -10,6 +10,8 @@ export default function Login() {
   const [form, setForm] = useState({ email:'', password:'' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const info = location.state?.info || '';
 
   const submit = async () => {
     setMessage('');
@@ -31,6 +33,12 @@ export default function Login() {
       </div>
       
       <Card className="p-6 sm:p-8 shadow-xl">
+        {info && (
+          <div className="flex items-center gap-2 p-3 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg mb-4">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+            <span>{info}</span>
+          </div>
+        )}
         <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="space-y-5">
           <Input
             icon={Mail}
