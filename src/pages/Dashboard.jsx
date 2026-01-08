@@ -10,6 +10,7 @@ export default function Dashboard() {
   const { session, profile } = useAuth();
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [showAddRoom, setShowAddRoom] = useState(false);
 
   const fetchOwnerRooms = async () => {
     if (!session) return;
@@ -17,7 +18,7 @@ export default function Dashboard() {
       .from('rooms')
       .select('*')
       .eq('owner', session.user.id)
-      .order('created_at', { ascending:false });
+      .order('created_at', { ascending: false });
     setRooms(data || []);
   };
 
@@ -57,24 +58,42 @@ export default function Dashboard() {
             <TrendingUp className="w-8 h-8 text-indigo-600 opacity-60" />
           </div>
         </Card>
-        <Card className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+        <Card
+          onClick={() => setShowAddRoom(prev => !prev)}
+          className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 cursor-pointer hover:shadow-md transition"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-purple-700 mb-1">Add New</p>
               <p className="text-2xl font-bold text-purple-900">+</p>
             </div>
-            <PlusCircle className="w-8 h-8 text-purple-600 opacity-60" />
+            <PlusCircle
+              className={`w-8 h-8 text-purple-600 opacity-60 transition-transform ${showAddRoom ? "rotate-45" : ""
+                }`}
+            />
           </div>
         </Card>
+
       </div>
 
-      <Card className="mb-6 p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <PlusCircle className="w-5 h-5 text-blue-600" />
-          <h3 className="font-semibold text-gray-900">Add New Room Listing</h3>
-        </div>
-        <AddRoom user={session.user} onRoomAdded={fetchOwnerRooms} />
-      </Card>
+      {showAddRoom && (
+        <Card className="mb-6 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <PlusCircle className="w-5 h-5 text-blue-600" />
+            <h3 className="font-semibold text-gray-900">
+              Add New Room Listing
+            </h3>
+          </div>
+          <AddRoom
+            user={session.user}
+            onRoomAdded={() => {
+              fetchOwnerRooms();
+              setShowAddRoom(false); // auto-close after add
+            }}
+          />
+        </Card>
+      )}
+
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -83,7 +102,7 @@ export default function Dashboard() {
         </div>
         <span className="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">{rooms.length} rooms</span>
       </div>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {rooms.map(r => (
           <RoomCard
@@ -91,15 +110,16 @@ export default function Dashboard() {
             room={r}
             expanded={selectedRoom === r.id}
             onExpand={() => setSelectedRoom(selectedRoom === r.id ? null : r.id)}
+            className="dark:bg-gray-900 dark:border-gray-700"
           />
         ))}
       </div>
       {rooms.length === 0 && (
-        <Card className="py-16">
+        <Card className="py-16 dark:bg-gray-900 dark:border-gray-700">
           <div className="text-center">
-            <HomeIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium mb-1">No listings yet</p>
-            <p className="text-sm text-gray-500">Add your first room listing above to get started</p>
+            <HomeIcon className="w-16 h-16 text-gray-300 dark:text-gray-700 mx-auto mb-4" />
+            <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">No listings yet</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Add your first room listing above to get started</p>
           </div>
         </Card>
       )}

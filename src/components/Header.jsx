@@ -27,39 +27,41 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/80 shadow-sm">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between h-16">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="flex items-center gap-2 group"
           >
-            <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 group-hover:from-blue-700 group-hover:to-indigo-700 transition-all">
-              <LogoIcon className="w-5 h-5 text-white" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="RoomFinder Logo"
+              className="w-15 h-15 object-contain transition-transform group-hover:scale-105"
+            />
+
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
               RoomFinder
             </span>
           </Link>
 
+
           <nav className="flex items-center gap-1 sm:gap-2">
-            <Link 
-              to="/" 
-              className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
-                isActive('/') 
-                  ? 'text-blue-600 bg-blue-50 shadow-sm' 
-                  : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-              }`}
+            <Link
+              to="/"
+              className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${isActive('/')
+                ? 'text-blue-600 bg-blue-50 shadow-sm'
+                : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                }`}
             >
               <Home className="w-4 h-4" />
               <span className="hidden sm:inline">Home</span>
             </Link>
 
             {session && profile?.role === 'owner' && (
-              <Link 
-                to="/dashboard" 
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
-                  isActive('/dashboard') 
-                    ? 'text-blue-600 bg-blue-50 shadow-sm' 
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                }`}
+              <Link
+                to="/dashboard"
+                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${isActive('/dashboard')
+                  ? 'text-blue-600 bg-blue-50 shadow-sm'
+                  : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                  }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
                 <span className="hidden sm:inline">Dashboard</span>
@@ -68,8 +70,8 @@ const Header = () => {
 
             {session ? (
               <div className="relative" ref={menuRef}>
-                <button 
-                  onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-all border border-gray-200 hover:border-gray-300"
                 >
                   <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white text-xs font-semibold">
@@ -93,15 +95,15 @@ const Header = () => {
                       </div>
                     </div>
                     <div className="py-1">
-                      <button 
-                        onClick={() => { navigate('/profile'); setIsMenuOpen(false); }} 
+                      <button
+                        onClick={() => { navigate('/profile'); setIsMenuOpen(false); }}
                         className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                       >
                         <UserCircle className="w-4 h-4" />
                         Profile
                       </button>
-                      <button 
-                        onClick={() => { signOut(); navigate('/login'); }} 
+                      <button
+                        onClick={() => { signOut(); navigate('/login'); }}
                         className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
@@ -113,19 +115,18 @@ const Header = () => {
               </div>
             ) : (
               <>
-                <Link 
-                  to="/login" 
-                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
-                    isActive('/login') 
-                      ? 'text-blue-600 bg-blue-50' 
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                  }`}
+                <Link
+                  to="/login"
+                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all ${isActive('/login')
+                    ? 'text-blue-600 bg-blue-50'
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    }`}
                 >
                   <LogIn className="w-4 h-4" />
                   <span className="hidden sm:inline">Login</span>
                 </Link>
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all"
                 >
                   <UserPlus className="w-4 h-4" />

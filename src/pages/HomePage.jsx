@@ -2,6 +2,19 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import ImageUpload from "./ImageUpload";
+
+function BodyScrollLock({ isLocked }) {
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    if (isLocked) document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [isLocked]);
+
+  return null;
+}
+
 import {
   SearchIcon,
   LocationIcon,
@@ -191,15 +204,14 @@ export default function HomePage() {
           <Card key={room.id} hover className="overflow-hidden group">
             {/* Images */}
             {room.room_images?.length > 0 ? (
-              <div className="relative grid grid-cols-3 gap-0.5 h-40 overflow-hidden">
-                {room.room_images.slice(0, 3).map((img, i) => (
-                  <img
-                    key={i}
-                    src={getImageUrl(img.image_path)}
-                    alt="room"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                ))}
+              <div className="relative h-40 overflow-hidden">
+                <img
+                  src={getImageUrl(room.room_images[0].image_path)}
+                  alt="room"
+                  className="w-full h-full object-cover block group-hover:scale-110 transition-transform duration-300"
+                />
+
+                {/* Image count badge */}
                 <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
                   <ImageIcon className="w-3 h-3 text-blue-600" />
                   <span className="text-xs font-medium text-gray-700">
@@ -210,7 +222,6 @@ export default function HomePage() {
             ) : (
               <div className="h-40 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative">
                 <ImageIcon className="w-12 h-12 text-gray-400" />
-                <div className="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition-colors" />
               </div>
             )}
 
@@ -289,113 +300,148 @@ export default function HomePage() {
             </div>
 
             {/* Edit Form */}
-            {editingRoomId === room.id &&
-              session &&
-              room.owner === session.user.id && (
-                <div className="border-t border-gray-200 p-4 bg-gradient-to-br from-gray-50 to-blue-50/30">
-                  <form
-                    onSubmit={async (e) => {
-                      e.preventDefault();
-                      const { error } = await supabase
-                        .from("rooms")
-                        .update(editForm)
-                        .eq("id", room.id);
-                      if (error) {
-                        alert(error.message);
-                      } else {
-                        alert("Room updated successfully");
-                        setEditingRoomId(null);
-                        fetchRooms();
-                      }
-                    }}
-                    className="space-y-3"
+            {editingRoomId === room.id && session && room.owner === session.user.id && (
+              <>
+                {/* Overlay (covers whole viewport) */}
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center"
+                  aria-modal="true"
+                  role="dialog"
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") setEditingRoomId(null);
+                  }}
+                >
+                  {/* Semi-opaque dark layer + backdrop blur */}
+                  <div
+                    className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+                    onClick={() => setEditingRoomId(null)}
+                  />
+
+                  {/* Modal panel */}
+                  <div
+                    className="relative z-10 w-full max-w-lg mx-4 bg-white/95 rounded-lg shadow-xl border border-gray-200 p-6
+                   transform transition-all duration-200
+                   sm:mx-0"
+                    onClick={(e) => e.stopPropagation()} // prevent overlay click from closing when clicking inside modal
                   >
-                    <Input
-                      value={editForm.title || ""}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, title: e.target.value })
-                      }
-                      placeholder="Title"
-                      required
-                    />
-                    <Input
-                      icon={MapPin}
-                      value={editForm.location || ""}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, location: e.target.value })
-                      }
-                      placeholder="Location"
-                      required
-                    />
-                    <Input
-                      icon={DollarSign}
-                      type="number"
-                      value={editForm.rent || ""}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, rent: e.target.value })
-                      }
-                      placeholder="Rent"
-                      required
-                    />
-                    <Input
-                      icon={Home}
-                      value={editForm.property_type || ""}
-                      onChange={(e) =>
-                        setEditForm({
-                          ...editForm,
-                          property_type: e.target.value,
-                        })
-                      }
-                      placeholder="Property Type"
-                      required
-                    />
-                    <Input
-                      icon={Users}
-                      value={editForm.tenant_preference || ""}
-                      onChange={(e) =>
-                        setEditForm({
-                          ...editForm,
-                          tenant_preference: e.target.value,
-                        })
-                      }
-                      placeholder="Tenant Preference"
-                      required
-                    />
-                    <Input
-                      icon={Phone}
-                      value={editForm.contact_number || ""}
-                      onChange={(e) =>
-                        setEditForm({
-                          ...editForm,
-                          contact_number: e.target.value,
-                        })
-                      }
-                      placeholder="Contact Number"
-                    />
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        type="submit"
-                        size="sm"
-                        variant="primary"
-                        className="flex-1"
-                      >
-                        <Save className="w-3 h-3 mr-1" />
-                        Save
-                      </Button>
-                      <Button
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-gray-900">Edit room</h3>
+                      <button
                         type="button"
-                        size="sm"
-                        variant="secondary"
-                        className="flex-1"
+                        aria-label="Close"
+                        className="text-gray-500 hover:text-gray-700 ml-2"
                         onClick={() => setEditingRoomId(null)}
                       >
-                        <X className="w-3 h-3 mr-1" />
-                        Cancel
-                      </Button>
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
-                  </form>
+
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        const { error } = await supabase
+                          .from("rooms")
+                          .update(editForm)
+                          .eq("id", room.id);
+                        if (error) {
+                          alert(error.message);
+                        } else {
+                          alert("Room updated successfully");
+                          setEditingRoomId(null);
+                          fetchRooms();
+                        }
+                      }}
+                      className="space-y-3"
+                    >
+                      <Input
+                        value={editForm.title || ""}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, title: e.target.value })
+                        }
+                        placeholder="Title"
+                        required
+                      />
+                      <Input
+                        icon={MapPin}
+                        value={editForm.location || ""}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, location: e.target.value })
+                        }
+                        placeholder="Location"
+                        required
+                      />
+                      <Input
+                        icon={DollarSign}
+                        type="number"
+                        value={editForm.rent || ""}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, rent: e.target.value })
+                        }
+                        placeholder="Rent"
+                        required
+                      />
+                      <Input
+                        icon={Home}
+                        value={editForm.property_type || ""}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            property_type: e.target.value,
+                          })
+                        }
+                        placeholder="Property Type"
+                        required
+                      />
+                      <Input
+                        icon={Users}
+                        value={editForm.tenant_preference || ""}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            tenant_preference: e.target.value,
+                          })
+                        }
+                        placeholder="Tenant Preference"
+                        required
+                      />
+                      <Input
+                        icon={Phone}
+                        value={editForm.contact_number || ""}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            contact_number: e.target.value,
+                          })
+                        }
+                        placeholder="Contact Number"
+                      />
+                      <div className="flex gap-2 pt-2">
+                        <Button type="submit" size="sm" variant="primary" className="flex-1">
+                          <Save className="w-3 h-3 mr-1" />
+                          Save
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="secondary"
+                          className="flex-1"
+                          onClick={() => setEditingRoomId(null)}
+                        >
+                          <X className="w-3 h-3 mr-1" />
+                          Cancel
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              )}
+
+                {/* Body scroll lock while modal open */}
+                {typeof window !== "undefined" && (
+                  <BodyScrollLock isLocked={true} />
+                )}
+              </>
+            )}
+
           </Card>
         ))}
       </div>
